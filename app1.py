@@ -1,27 +1,28 @@
 import streamlit as st
 from transformers import pipeline
 
-# Load pre-trained model for text classification
-classifier = pipeline("sentiment-analysis")
+# Function to make predictions
+def classify_text(text, model_name):
+    classifier = pipeline("text-classification", model=model_name)
+    prediction = classifier(text)
+    return prediction[0]
 
-# Streamlit app
 def main():
     st.title("Text Classification App")
-
-    # User input for text
-    text_input = st.text_area("Enter text for classification:")
+    
+    model_name = st.text_input("Enter the Hugging Face model name (e.g., distilbert-base-uncased)")
+    text = st.text_area("Enter text for classification")
 
     if st.button("Classify"):
-        if text_input:
-            # Perform classification
-            result = classifier(text_input)
-            
-            # Display result
-            st.write("### Classification Result:")
-            for res in result:
-                st.write(f"Label: {res['label']}, Confidence: {res['score']}")
+        if model_name.strip() == "":
+            st.warning("Please enter a valid Hugging Face model name.")
+        elif text.strip() == "":
+            st.warning("Please enter some text for classification.")
         else:
-            st.warning("Please enter some text.")
+            with st.spinner("Classifying..."):
+                prediction = classify_text(text, model_name)
+                st.write(f"Predicted label: {prediction['label']}")
+                st.write(f"Confidence score: {prediction['score']}")
 
 if __name__ == "__main__":
     main()
