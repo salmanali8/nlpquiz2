@@ -13,6 +13,8 @@ def main():
     
     if not transformers_available:
         st.error("Please install the transformers library to use this app.")
+        st.write("You can install it via terminal using:")
+        st.code("pip install transformers")
         st.stop()
 
     classifier = pipeline("sentiment-analysis")
