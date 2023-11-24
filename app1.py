@@ -1,23 +1,12 @@
 import streamlit as st
+from transformers import pipeline
 
-# Attempt to import transformers
-try:
-    from transformers import pipeline
-    transformers_available = True
-except ImportError:
-    transformers_available = False
+# Load pre-trained model for text classification
+classifier = pipeline("sentiment-analysis")
 
 # Streamlit app
 def main():
     st.title("Text Classification App")
-    
-    if not transformers_available:
-        st.error("Please install the transformers library to use this app.")
-        st.write("You can install it via terminal using:")
-        st.code("pip install transformers")
-        st.stop()
-
-    classifier = pipeline("sentiment-analysis")
 
     # User input for text
     text_input = st.text_area("Enter text for classification:")
